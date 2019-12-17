@@ -3,6 +3,7 @@ package subprocess
 import (
 	"context"
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -32,6 +33,8 @@ func (sbpctx *Context) StartWith(Parameter string) {
 	sbpctx.ctx, sbpctx.cancel = context.WithCancel(context.Background())
 	log.Printf("Running '%v %v'", sbpctx.Command, Parameter)
 	sbpctx.subProc = exec.CommandContext(sbpctx.ctx, sbpctx.Command, Parameter)
+	sbpctx.subProc.Stdout = os.Stdout
+	sbpctx.subProc.Stderr = os.Stderr
 
 	if err := sbpctx.subProc.Start(); err != nil {
 		log.Fatal(err)
